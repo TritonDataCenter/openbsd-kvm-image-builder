@@ -1,0 +1,23 @@
+#!/usr/local/bin/bash
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+#
+# Script that will overwrite ~/.ssh/authorized keys if mdata field overwrite_root_akeys = OVERWRITE
+# This allows for customers to update ssh keys when running this script
+# By default this script is called on each boot
+
+# load common functions and vars
+. /lib/smartdc/common.lib
+
+if [[ ! -f /root/.ssh/authorized_keys ]]; then
+    authorized_keys=$($MDATA_GET root_authorized_keys | awk '{ sub(/(ssh-rsa )/,"\n&"); print }' | awk '{ sub(/(ssh-dss )/,"\n&"); print }' 2>>/dev/console)
+    if [[ -n ${authorized_keys} ]]; then
+        mkdir -p /root/.ssh
+        echo -e "${authorized_keys}" > /root/.ssh/authorized_keys
+        lib_triton_info "Creating /root/.ssh/authorized_keys with Metadata field root_authorized_keys"
+        chmod 700 /root/.ssh
+        chmod 600 /root/.ssh/authorized_keys
+    fi
+fi
+
+exit 0

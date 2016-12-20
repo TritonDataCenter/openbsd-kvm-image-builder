@@ -1,0 +1,256 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+set -o xtrace
+
+CUR_TIME=$(date +%FT%TZ)
+INSTALLER_CFG="installerconfig"
+TRITON_DIST_FILE="site60.tgz"
+WORK_DIR="work"
+
+RELEASE=
+MIRROR=
+MIRROR_PATH=
+ISO=
+ISO_DIR=
+ISO_MOUNT=
+ISO_LAYOUT=
+ISO_CHECKSUM=
+ISO_FILENAME=
+
+
+usage() {
+cat <<EOF
+
+Create a custom OpenBSD ISO with the necessary packages and tooling installed 
+for deploying on SmartOS, Triton and the Joyent Public Cloud.
+
+Usage:
+  $0 -r <RELEASE> -m <MIRROR> -p <MIRROR_PATH> -i <ISO> -c <ISO_CHECKSUM> -d <ISO_DIR> -M <ISO_MOUNT> -l <ISO_LAYOUT> -f <ISO_FILENAME>
+
+Example:
+  $0 -r 6.0/amd64 -m ftp.openbsd.org -p /pub/OpenBSD -i install60.iso -c SHA256.sig -d /data/openbsd-iso -M /mnt/openbsd-iso -l /data/openbsd-custom-6.0 -f openbsd-6.0-custom.iso
+
+OPTIONS:
+  -r The desired OpenBSD release (e.g., 6.0/amd64)
+  -m The mirror to use when downloading the release ISO. Do not include protocol (e.g., http://). Assumes http mirror
+  -p The desired mirror path to the ISO (e.g., /pub/OpenBSD)
+  -i The ISO filename
+  -c The name of the checksum file for the ISO
+  -d The location to save the dowloaded ISO. Must be absolute path.
+  -M The mount point for the downloaded ISO
+  -l The directory location for saving a copy of the ISO layout. Must be absolute path.
+  -f The name to use for the custom ISO
+  -h Show this message
+
+EOF
+}
+
+while getopts "hr:m:p:i:c:d:M:l:f:" OPTION
+do
+  case $OPTION in
+    h)
+      usage
+      exit 1
+      ;;
+    r)
+      RELEASE=${OPTARG}
+      ;;
+    m)
+      MIRROR=${OPTARG%/}
+      ;;
+    p)
+      MIRROR_PATH=${OPTARG%/}
+      ;;
+    i)
+      ISO=${OPTARG}
+      ;;
+    c)
+      ISO_CHECKSUM=${OPTARG}
+      ;;
+    d)
+      ISO_DIR=${OPTARG%/}
+      ;;
+    M)
+      ISO_MOUNT=${OPTARG%/}
+      ;;
+    l)
+      ISO_LAYOUT=${OPTARG%/}
+      ;;
+    f)
+      ISO_FILENAME="./${OPTARG}"
+      ;;
+    ?)
+      usage
+      exit
+      ;;
+  esac
+done
+
+if [[ -z ${RELEASE} ]]; then
+  echo "Error: missing release value (-r)"
+  exit 1
+fi
+
+if [[ -z ${MIRROR} ]]; then
+  echo "Error: missing mirror url (-m)"
+  exit 1
+fi
+
+if [[ -z ${MIRROR_PATH} ]]; then
+  echo "Error: missing mirror path (-p)"
+  exit 1
+fi
+
+if [[ -z ${ISO} ]]; then
+  echo "Error: missing ISO (-i) value"
+  exit 1
+fi
+
+if [[ -z ${ISO} ]]; then
+  echo "Error: missing ISO checksum (-c) value"
+  exit 1
+fi
+
+if [[ -z ${ISO_DIR} ]]; then
+  echo "Error: missing ISO directory (-d) value"
+  exit 1
+fi
+
+if [[ -z ${ISO_MOUNT} ]]; then
+  echo "Error: missing mount point directory (-M) value"
+  exit 1
+fi
+
+if [[ -z ${ISO_LAYOUT} ]]; then
+  echo "Error: missing DVD layout directory (-l) value"
+  exit 1
+fi
+
+if [[ -z ${ISO_FILENAME} ]]; then
+  echo "Error: missing custom ISO file name (-f) value"
+  exit 1
+fi
+
+# Clean up ISO file if download is interrupted
+trap "rm -rf ${ISO_DIR}/${ISO}" SIGHUP SIGINT SIGKILL SIGTERM
+# Delete Previous custom layout
+trap "rm -rf ${ISO_LAYOUT}" SIGHUP SIGINT SIGKILL SIGTERM
+
+function fetch_iso() {
+  if [[ ! -d $ISO_DIR ]]; then
+    mkdir -p $ISO_DIR
+  fi
+  
+  echo "==> Fetching ${ISO_CHECKSUM}"
+  curl -o ${ISO_DIR}/${ISO_CHECKSUM} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO_CHECKSUM}
+  
+  echo "==> Checking for local copy of $ISO..."
+  if [[ -e $ISO_DIR/$ISO ]]; then
+    echo "==> Found local copy of $ISO"
+    
+  else
+      echo "==> Local copy not found."
+      echo "==> Fetching ISO from $MIRROR..."
+      curl -o ${ISO_DIR}/${ISO} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO}
+      echo "==> Done!"
+      echo "==> ${ISO} saved to $ISO_DIR/"
+      
+      echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
+    
+      if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[[:space:]]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[[:space:]]')" ]]; then
+          echo "==> Checksums match."
+      else
+          echo "==> Checksums don't match!"
+          exit 1
+      fi
+  fi
+}
+
+function create_layout() {
+  echo "==> Creating custom ISO Layout"
+  if [[ -d $ISO_LAYOUT ]]; then
+      echo "==> Previous layout $ISO_LAYOUT exists...deleting"
+      rm -rf $ISO_LAYOUT
+  fi
+  echo "==> Creating $ISO_LAYOUT"
+  mkdir -p $ISO_LAYOUT
+  
+  if [[ ! -d $ISO_MOUNT ]]; then
+      echo "==> Creating $ISO_MOUNT ..."
+      mkdir $ISO_MOUNT 
+  fi
+  
+  if [[ $(df | grep $ISO_MOUNT) ]]; then
+    echo "==> Unmounting previous $ISO_MOUNT..."
+    umount $ISO_MOUNT
+  fi
+  
+  echo "==> Mounting $ISO to $ISO_MOUNT"
+  vnconfig vnd0 $ISO_DIR/$ISO
+  mount -t cd9660 /dev/vnd0c $ISO_MOUNT
+  
+  echo "==> Copying layout from $ISO_MOUNT to $ISO_LAYOUT"
+  rsync -aq $ISO_MOUNT/ $ISO_LAYOUT
+  
+  echo "==> Copying and integrating Triton guesttools:"
+
+  # Cleanup previous distribution file
+  [[ -f $TRITON_DIST_FILE ]] && rm $TRITON_DIST_FILE
+
+  ( cd triton-openbsd-guesttools
+    tar -czpf ../${TRITON_DIST_FILE} ./etc ./lib ./usr
+  )
+
+  #DISTFILE_SHASUM_STDOUT=$(sha256 $TRITON_DIST_FILE)
+  #DISTFILE_SHASUM_PLAIN=${DISTFILE_SHASUM_STDOUT% *}
+  #DISTFILE_FILECOUNT=$(tar -tjf $TRITON_DIST_FILE | wc -l | tr -d ' ')
+
+  cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
+
+  echo "==> Creating workdir and untar base60.tgz"
+  mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
+  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base60.tgz
+  echo "==> Copying $INSTALLER_CFG to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
+  cp $INSTALLER_CFG $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
+  
+  echo "==> Enable serial and internal consoles"
+  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
+  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
+  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/ttys
+  
+  echo "==> Get network up automatically in the blank VM"
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio0
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio1
+  
+  echo "==> Set resolvers in the blank VM"
+  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
+  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
+
+  echo "==> Retar the archive and remove workdir"
+  tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
+  rm -rf $ISO_LAYOUT/$RELEASE/$WORK_DIR
+  
+  echo "==> Unmounting $ISO_MOUNT"
+  umount $ISO_MOUNT
+  vnconfig -u vnd0
+}
+
+function create_newiso() {
+  echo "==> Getting Volume ID for ${ISO}"
+  CUSTOM_ISO_TITLE=$(isoinfo -d -i ${ISO_DIR}/${ISO} | grep "Volume id" | awk '{print $3}')
+  echo "==> Volume ID is $CUSTOM_ISO_TITLE"
+  
+  echo "==> Preparing NEW ISO"
+  mkisofs -J -R -no-emul-boot \
+    -V "$CUSTOM_ISO_TITLE" \
+    -p "Joyent" -b $RELEASE/cdboot \
+    -o $ISO_FILENAME $ISO_LAYOUT
+  echo "==> Custom ISO now ready: $ISO_FILENAME"
+}
+
+echo "==> ISO Build Starting!"
+fetch_iso
+create_layout
+create_newiso

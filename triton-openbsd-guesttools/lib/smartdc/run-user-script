@@ -1,0 +1,43 @@
+#!/usr/local/bin/bash
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+#
+# Script that will use mdata field of run_userscript_flag
+# If field is set to TRUE, when this script is ran, then the mdata user-script 
+# is updated and executed
+# By default the mdata user-script is only ran once on the first boot after 
+# provisioning
+# This script is executed on each system boot
+
+# load common functions and vars
+. /lib/smartdc/common.lib
+
+lib_triton_info "Retrieving metadata user-script..."
+$MDATA_GET user-script >/var/tmp/mdata-user-script.new
+case $? in
+  0)
+    lib_triton_info "Metadata user-script successfuly retrieved."
+    mv /var/tmp/mdata-user-script{.new,}
+    chmod +x /var/tmp/mdata-user-script
+    ;;
+  1)
+    lib_triton_info "Metadata user-script not defined."
+    rm -f /var/tmp/mdata-user-script{,.new}
+    ;;
+  *)
+    lib_triton_fatal "Metadata couldn't be retrieved."
+    ;;
+esac
+
+user_script_exit=0
+if [[ -x /var/tmp/mdata-user-script ]]; then
+  lib_triton_info "Executing metadata user-script"
+  USER_SCRIPT_LOG=/var/log/mdata-user-script.log
+  if [[ ! -e $USER_SCRIPT_LOG ]]; then
+    touch $USER_SCRIPT_LOG
+  fi
+  /var/svc/mdata-user-script >> $USER_SCRIPT_LOG 2>&1
+  [[ $? -gt 0 ]] && user_script_exit=95
+fi
+
+exit ${user_script_exit}

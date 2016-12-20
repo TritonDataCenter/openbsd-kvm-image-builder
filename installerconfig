@@ -1,0 +1,81 @@
+PARTITIONS=sd0
+DISTRIBUTIONS="kernel.txz base.txz triton.txz"
+
+#!/bin/sh
+
+set -o xtrace
+echo "==> Running installerconfig"
+
+# Enable serial and internal consoles
+echo "==> Enabling serial and internal consoles"
+echo "stty com0 38400" > /etc/boot.conf
+echo "set tty com0" >> /etc/boot.conf
+echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
+
+echo "==> Setting autoboot delay to 5 seconds. Default is 10"
+
+echo "==> Setting up rc.conf.local"
+cat > /etc/rc.conf.local << RC_CONF
+fsck_y_enable="YES"
+dumpdev="AUTO"
+
+# Enable Triton support. Do not remove.
+triton_enable="YES"
+
+sshd_enable="YES"
+ntpd_enable="YES"
+ntpd_sync_on_start="YES"
+
+RC_CONF
+
+# Set Time Zone to UTC
+echo "==> Setting Time Zone to UTC"
+ln -s /usr/share/zoneinfo/UTC /etc/localtime
+
+# Fetch and install binary updates. Ensures we have the latest security fixes.
+echo "==> Setting up pkg.conf with default mirror repository"
+echo "installpath = mirrors.evowise.com" >> /etc/pkg.conf
+
+echo "==> Installing packages"
+pkg_add -I -u
+pkg_add -I bash curl node wget
+
+echo "== Enable root login via ssh"
+sed -i.bak -e s/#PermitRootLogin\ no/PermitRootLogin\ without-password/g /etc/ssh/sshd_config
+
+## Build date used for motd and product file
+BUILDDATE=$(date +%Y%m%d)
+RELEASE="11.0"
+DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
+
+# Create MOTD
+echo "Creating /etc/motd"
+mv /etc/motd /etc/motd-backup
+cat << MOTD > /etc/motd
+   __        .                   .
+ _|  |_      | .-. .  . .-. :--. |-
+|_    _|     ;|   ||  |(.-' |  | |
+  |__|   \`--'  \`-' \`;-| \`-' '  ' \`-'
+                   /  ;  Instance (OpenBSD $RELEASE $BUILDDATE)
+                   \`-'   $DOC_URL
+
+MOTD
+
+# Create product file
+echo "Creating /etc/product file"
+cat << PRODUCT > /etc/product
+Name: Joyent Instance
+Image: OpenBSD $RELEASE $BUILDDATE
+Documentation: $DOC_URL
+Description: OpenBSD $RELEASE 64-bit image with just essential packages \
+installed. Ideal for users who are comfortable with setting up their \
+own environment and tools.
+PRODUCT
+
+echo "Cleaning up"
+rm -rf /etc/installerconfig
+
+echo "End of installerconfig"
+
+# Shutdown/Poweroff
+halt -p

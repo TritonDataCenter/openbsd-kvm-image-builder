@@ -1,0 +1,30 @@
+#!/usr/local/bin/bash
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+# This script checks new network interfaces for and enables via DHCP at boot.
+
+# load common functions and vars
+. /lib/smartdc/common.lib
+
+nic_added=n
+
+for device in $(ifconfig | grep flags | cut -d: -f1); do
+  if [[ "lo" == "${device:0:2}" ]]; then
+    continue
+  fi
+
+  ls /etc/hostname.$device &>/dev/null
+  if [[ $? -ne 0 ]]; then
+    lib_triton_info "New interface found: $device. Adding to /etc/hostname.$device"
+    echo "dhcp # Added by triton" >> /etc/hostname.$device
+
+    nic_added=y
+  fi
+done
+
+if [[ "$nic_added" == "y" ]]; then
+  lib_triton_info "Restarting /etc/netstart"
+  /etc/netstart restart
+fi
+
+exit 0

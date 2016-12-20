@@ -1,0 +1,34 @@
+#!/usr/local/bin/bash
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+# Set the hostname of the VM if it's not already configured by the user.
+
+# load common functions and vars
+. /lib/smartdc/common.lib
+
+ls /etc/myname &>/dev/null
+if [[ $? -ne 0 ]]; then
+  lib_triton_info "No hostname set in /etc/myname."
+  hostname=$($MDATA_GET sdc:hostname) && \
+    lib_triton_info "Setting hostname to sdc:hostname: $hostname."
+  
+  if [[ $? -ne 0 ]]; then
+    lib_triton_info "No value set for sdc:hostname."
+    hostname=$($MDATA_GET sdc:uuid) && \
+      lib_triton_info "Setting hostname to sdc:uuid: $hostname"
+    
+    if [[ $? -ne 0 ]]; then
+      lib_triton_info "No value set for sdc:uuid. Setting empty hostname."
+      hostname=""
+      
+    fi
+  fi
+
+  if [[ ! -z "$hostname" ]]; then
+    lib_triton_info "Creating /etc/myname and setting hostname"
+    echo "$hostname # Added by triton. This can be modified." > /etc/myname
+    hostname $hostname
+  fi
+fi
+
+exit 0

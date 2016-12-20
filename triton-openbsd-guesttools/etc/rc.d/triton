@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# PROVIDE: triton
+
+# Adds support for Triton (and SmartOS)
+
+. /etc/rc.subr
+
+name="triton"
+
+start_cmd="${name}_start"
+stop_cmd=":"
+
+load_rc_config $name
+
+triton_start()
+{
+  /lib/smartdc/triton
+}
+
+run_rc_command "$1"

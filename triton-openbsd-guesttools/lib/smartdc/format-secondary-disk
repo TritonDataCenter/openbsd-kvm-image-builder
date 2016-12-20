@@ -1,0 +1,107 @@
+#!/usr/local/bin/bash
+
+#
+# Copyright (c) 2016 Joyent Inc., All rights reserved.
+#
+# formats the OpenBSD secondary disk ( /dev/sd1 )
+# also refered to as the /data disk
+
+# Users can provision this disk how they like
+# By default we provision the whole disk as one partition
+
+# load common functions and vars
+. /lib/smartdc/common.lib
+
+DATADISKDEVICE='sd1'
+DISKLABELTEMPLATE='/tmp/disklabel.template'
+FDISK=/sbin/fdisk
+
+checkformount() {
+   fstest=$(df -h | grep "/dev/${DATADISKDEVICE}a")
+   if [[ -n "$fstest" ]] ; then
+     fssize=$(echo $fstest | sed -E '/[[:space:]]{2,}/s// /g' | cut -d ' ' -f2)
+     lib_triton_info "$fssize data disk is mounted on /dev/${DATADISKDEVICE}a"
+     return 1
+   else
+     lib_triton_info "no data disk is mounted on /dev/${DATADISKDEVICE}a"
+     return 0
+   fi
+}
+
+# Start of Main
+
+# check for device
+if [[ ! -e /dev/${DATADISKDEVICE} ]] ; then
+  lib_triton_fatal "secondary disk '/dev/${DATADISKDEVICE}' not found. exiting."
+fi
+
+## Sanity check
+checkformount
+return_val=$?
+if [[ "$return_val" -eq 1 ]]; then
+  lib_triton_fatal "data disk is already mounted"
+else 
+  lib_triton_info "no data disk is mounted"
+fi
+
+## make sure that a partiton does not already exist
+## we do not want to delete any data
+partexists=$($FDISK ${DATADISKDEVICE} | grep "OpenBSD")
+if [[ $partexists -eq 0 ]] ; then
+    lib_triton_fatal "Data disk partition '/dev/${DATADISKDEVICE}' found. Exiting to prevent deleting data. You will have to format data disk partition manually."
+    exit 0;
+fi
+
+## create the data disk
+
+# writing MBR to the data disk
+lib_triton_info "write MBR to /dev/${DATADISKDEVICE}"
+fdisk -y -i ${DATADISKDEVICE}
+
+# creating template for disklabel
+lib_triton_info "creating template for disklabel"
+echo "/    1M-*  100%" > ${DISKLABELTEMPLATE}
+
+# making partition table
+lib_triton_info "creating partition /dev/${DATADISKDEVICE}"
+
+# creating a single partition for the whole disk, formatting it, and mounting it
+disklabel -A -T ${DISKLABELTEMPLATE} -w ${DATADISKDEVICE}
+
+lib_triton_info "creating new filesystem on /dev/${DATADISKDEVICE}p1"
+newfs ${DATADISKDEVICE}
+
+# Check for /data and make it
+if [[ ! -e /data ]]; then
+    lib_triton_info "making /data dir mount point"
+    mkdir /data
+fi
+
+# add entry to fstab so data disk is mounted on reboot
+duid=$(disklabel ${DATADISKDEVICE} | grep duid | cut -d ' ' -f 2)
+fsentry=$(grep "$duid.a" /etc/fstab | wc -l | tr -d ' ')
+echo "-- $fsentry --"
+if [[ $fsentry -eq 0 ]] ; then
+  lib_triton_info "adding fstab entry for ${DATADISKDEVICE}"
+  printf "$duid.a\t/data\t\tffs\trw\t2\t2\n" >> /etc/fstab
+else
+  lib_triton_info "not adding as fstab entry already exist for ${DATADISKDEVICE} or $duid.a"
+fi
+
+# fsck disk
+lib_triton_info "fscking ${DATADISKDEVICE}a"
+fsck -y -t ffs ${DATADISKDEVICE}a
+
+# mount the data disk
+lib_triton_info "mounting ${DATADISKDEVICE}a as /data"
+mount /data
+
+checkformount
+return_val=$?
+if [[ "$return_val" -eq 1 ]]; then
+  lib_triton_info "data disk is mounted"
+else 
+  lib_triton_fatal "no data disk is mounted"
+fi
+
+exit 0
