@@ -5,7 +5,7 @@ IFS=$'\n\t'
 set -o xtrace
 
 CUR_TIME=$(date +%FT%TZ)
-INSTALLER_CFG="installerconfig"
+AUTO_INST="auto_install.conf"
 TRITON_DIST_FILE="site60.tgz"
 WORK_DIR="work"
 
@@ -212,8 +212,8 @@ function create_layout() {
   echo "==> Creating workdir and untar base60.tgz"
   mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
   tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base60.tgz
-  echo "==> Copying $INSTALLER_CFG to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
-  cp $INSTALLER_CFG $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
+  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/"
+  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/
   
   echo "==> Enable serial and internal consoles"
   echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
