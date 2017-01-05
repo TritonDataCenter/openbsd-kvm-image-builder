@@ -1,5 +1,7 @@
 # openbsd-kvm-image-builder
 
+**WARNING**: This is a work in progress and is more than likely not fully functional.
+
 This repo creates a custom OpenBSD install ISO and a KVM image for use in SmartOS and Triton.
 
 ## Requirements
