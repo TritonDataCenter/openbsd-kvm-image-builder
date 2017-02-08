@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# Copyright (c) 2017 Joyent Inc., All rights reserved.
+#
 
 set -euo pipefail
 IFS=$'\n\t'
@@ -138,7 +141,7 @@ trap "rm -rf ${ISO_DIR}/${ISO}" SIGHUP SIGINT SIGKILL SIGTERM
 # Delete Previous custom layout
 trap "rm -rf ${ISO_LAYOUT}" SIGHUP SIGINT SIGKILL SIGTERM
 
-function fetch_iso() {
+fetch_iso() {
   if [[ ! -d $ISO_DIR ]]; then
     mkdir -p $ISO_DIR
   fi
@@ -168,7 +171,7 @@ function fetch_iso() {
   fi
 }
 
-function create_layout() {
+create_layout() {
   echo "==> Creating custom ISO Layout"
   if [[ -d $ISO_LAYOUT ]]; then
       echo "==> Previous layout $ISO_LAYOUT exists...deleting"
@@ -237,7 +240,7 @@ function create_layout() {
   vnconfig -u vnd0
 }
 
-function create_newiso() {
+create_newiso() {
   echo "==> Getting Volume ID for ${ISO}"
   CUSTOM_ISO_TITLE=$(isoinfo -d -i ${ISO_DIR}/${ISO} | grep "Volume id" | awk '{print $3}')
   echo "==> Volume ID is $CUSTOM_ISO_TITLE"
