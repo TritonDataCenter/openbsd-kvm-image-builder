@@ -168,7 +168,7 @@ fetch_iso() {
       
       echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
     
-      if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[[:space:]]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[[:space:]]')" ]]; then
+      if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[:space:]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[:space:]')" ]]; then
           echo "==> Checksums match."
       else
           echo "==> Checksums don't match!"
