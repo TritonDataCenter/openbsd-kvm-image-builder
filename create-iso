@@ -143,9 +143,9 @@ if [[ -z ${ISO_FILENAME} ]]; then
 fi
 
 # Clean up ISO file if download is interrupted
-trap 'rm -rf ${ISO_DIR}/${ISO}' SIGHUP SIGINT SIGKILL SIGTERM
+trap 'rm -rf ${ISO_DIR}/${ISO}' SIGHUP SIGINT SIGTERM
 # Delete Previous custom layout
-trap 'rm -rf ${ISO_LAYOUT}' SIGHUP SIGINT SIGKILL SIGTERM
+trap 'rm -rf ${ISO_LAYOUT}' SIGHUP SIGINT SIGTERM
 
 fetch_iso() {
   if [[ ! -d $ISO_DIR ]]; then
