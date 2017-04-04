@@ -238,7 +238,7 @@ create_layout() {
 
   echo "==> Retar the archive and remove workdir"
   tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
-  rm -rf $ISO_LAYOUT/$RELEASE/$WORK_DIR
+  rm -rf ${ISO_LAYOUT:?}/${RELEASE}/${WORK_DIR}
   
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
