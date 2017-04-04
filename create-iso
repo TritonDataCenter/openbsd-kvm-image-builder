@@ -191,7 +191,7 @@ create_layout() {
       mkdir $ISO_MOUNT 
   fi
   
-  if [[ $(df | grep $ISO_MOUNT) ]]; then
+  if df | grep -q $ISO_MOUNT; then
     echo "==> Unmounting previous $ISO_MOUNT..."
     umount $ISO_MOUNT
   fi
