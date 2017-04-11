@@ -219,9 +219,9 @@ create_layout() {
 
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
 
-  echo "==> Creating workdir and untar base60.tgz"
+  echo "==> Creating workdir and untar base*.tgz"
   mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
-  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base60.tgz
+  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base*.tgz
 
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
   cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
