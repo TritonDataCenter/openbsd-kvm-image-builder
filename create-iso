@@ -35,7 +35,7 @@ Usage:
   $0 -r <RELEASE> -m <MIRROR> -p <MIRROR_PATH> -i <ISO> -c <ISO_CHECKSUM> -d <ISO_DIR> -M <ISO_MOUNT> -l <ISO_LAYOUT> -f <ISO_FILENAME>
 
 Example:
-  $0 -r 6.1 -m mirrors.evowise.com -p /pub/OpenBSD -i install61.iso -c SHA256 -d /data/openbsd-6.1-iso -M /mnt/openbsd-6.1-iso -l /data/openbsd-custom-6.1 -f openbsd-6.1-custom.iso
+  $0 -r 6.1 -m ftp5.usa.openbsd.org -p /pub/OpenBSD -i install61.iso -c SHA256 -d /data/openbsd-6.1-iso -M /mnt/openbsd-6.1-iso -l /data/openbsd-custom-6.1 -f openbsd-6.1-custom.iso
 
 OPTIONS:
   -r The desired OpenBSD release (e.g., 6.1)
