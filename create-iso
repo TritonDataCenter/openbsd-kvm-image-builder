@@ -211,10 +211,6 @@ create_layout() {
     tar -czpf ../${TRITON_DIST_FILE} ./etc ./lib ./usr
   )
 
-  #DISTFILE_SHASUM_STDOUT=$(sha256 $TRITON_DIST_FILE)
-  #DISTFILE_SHASUM_PLAIN=${DISTFILE_SHASUM_STDOUT% *}
-  #DISTFILE_FILECOUNT=$(tar -tjf $TRITON_DIST_FILE | wc -l | tr -d ' ')
-
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
 
   echo "==> Creating workdir and untar base60.tgz"
