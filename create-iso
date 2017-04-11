@@ -222,7 +222,7 @@ create_layout() {
   echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/etc/ttys
 
   echo "==> Get network up automatically in the blank VM"
-  echo "dhcp" > $ISO_LAYOUT/$RELEAS/etc/hostname.vio0
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio0
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio1
 
   echo "==> Set resolvers in the blank VM"
