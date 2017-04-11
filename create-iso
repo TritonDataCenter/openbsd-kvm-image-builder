@@ -152,7 +152,7 @@ fetch_iso() {
   fi
 
   echo "==> Fetching ${ISO_CHECKSUM}"
-  curl -o ${ISO_DIR}/${ISO_CHECKSUM} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/${ISO_CHECKSUM}
+  curl -sS -o ${ISO_DIR}/${ISO_CHECKSUM} https://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/${ISO_CHECKSUM}
 
   echo "==> Checking for local copy of $ISO..."
   if [[ -e $ISO_DIR/$ISO ]]; then
@@ -161,7 +161,7 @@ fetch_iso() {
   else
       echo "==> Local copy not found."
       echo "==> Fetching ISO from $MIRROR..."
-      curl -o ${ISO_DIR}/${ISO} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO}
+      curl -sS -o ${ISO_DIR}/${ISO} https://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO}
       echo "==> Done!"
       echo "==> ${ISO} saved to $ISO_DIR/"
 
