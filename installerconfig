@@ -1,5 +1,4 @@
 PARTITIONS=sd0
-DISTRIBUTIONS="kernel.txz base.txz triton.txz"
 
 #!/bin/sh
 
