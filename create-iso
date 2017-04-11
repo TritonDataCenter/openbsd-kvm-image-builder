@@ -156,6 +156,15 @@ fetch_iso() {
   if [[ -e $ISO_DIR/$ISO ]]; then
     echo "==> Found local copy of $ISO"
 
+    echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
+
+    if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[:space:]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[:space:]')" ]]; then
+        echo "==> Checksums match."
+    else
+        echo "==> Checksums don't match!"
+        exit 1
+    fi
+
   else
       echo "==> Local copy not found."
       echo "==> Fetching ISO from $MIRROR..."
