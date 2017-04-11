@@ -219,9 +219,9 @@ create_layout() {
 
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
 
-  echo "==> Creating workdir and untar base*.tgz"
+  echo "==> Creating workdir and untar base61.tgz"
   mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
-  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base*.tgz
+  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base61.tgz
 
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
   cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
@@ -240,7 +240,7 @@ create_layout() {
   echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
 
   echo "==> Retar the archive and remove workdir"
-  tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
+  tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base61.tgz ./
   rm -rf ${ISO_LAYOUT:?}/${RELEASE}/${WORK_DIR}
 
   echo "==> Unmounting $ISO_MOUNT"
