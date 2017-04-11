@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Adds support for Triton (and SmartOS)
+
+(/lib/smartdc/add-network-interface)
+(/lib/smartdc/set-hostname)
+(/lib/smartdc/set-root-authorized-keys)
+if [ ! -f /lib/smartdc/.firstboot-complete-do-not-delete ] ; then
+  (/lib/smartdc/firstboot)
+fi
+(/lib/smartdc/run-operator-script)
+(/lib/smartdc/get-user-data)
+(/lib/smartdc/run-user-script)
