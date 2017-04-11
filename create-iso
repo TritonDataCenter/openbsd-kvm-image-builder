@@ -193,7 +193,7 @@ create_layout() {
 
   if [[ ! -d $ISO_MOUNT ]]; then
       echo "==> Creating $ISO_MOUNT ..."
-      mkdir $ISO_MOUNT
+      mkdir -p $ISO_MOUNT
   fi
 
   if df | grep -q $ISO_MOUNT; then
@@ -219,7 +219,7 @@ create_layout() {
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
 
   echo "==> Creating workdir and untar base60.tgz"
-  mkdir $ISO_LAYOUT/$RELEASE
+  mkdir -p $ISO_LAYOUT/$RELEASE
   tar -xz -C $ISO_LAYOUT/$RELEASE -f $ISO_LAYOUT/$RELEASE/base60.tgz
 
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/etc/"
