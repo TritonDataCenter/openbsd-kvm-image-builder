@@ -23,8 +23,8 @@ for device in $(ifconfig | grep flags | cut -d: -f1); do
 done
 
 if [[ "$nic_added" == "y" ]]; then
-  lib_triton_info "Restarting /etc/netstart"
-  /etc/netstart restart
+  lib_triton_info "Adding $device"
+  /etc/netstart $device
 fi
 
 exit 0
