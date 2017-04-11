@@ -12,7 +12,7 @@ if [[ -n "$TRACE" ]]; then
 fi
 
 AUTO_INST="installerconfig"
-TRITON_DIST_FILE="site60.tgz"
+TRITON_DIST_FILE="site61.tgz"
 WORK_DIR="work"
 
 RELEASE=
