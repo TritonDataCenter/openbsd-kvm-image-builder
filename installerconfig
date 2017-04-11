@@ -37,7 +37,7 @@ sed -i.bak -e s/#PermitRootLogin\ no/PermitRootLogin\ without-password/g /etc/ss
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
-RELEASE="11.0"
+RELEASE="6.0"
 DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 
 # Create MOTD
