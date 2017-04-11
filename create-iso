@@ -223,13 +223,8 @@ create_layout() {
   echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/ttys
 
   echo "==> Get network up automatically in the blank VM"
-<<<<<<< HEAD
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio0
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio1
-=======
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio0
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio1
->>>>>>> parent of 8f9903b... Get rid of WORK_DIR
 
   echo "==> Set resolvers in the blank VM"
   echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
