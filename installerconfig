@@ -15,15 +15,8 @@ echo "==> Setting autoboot delay to 5 seconds. Default is 10"
 
 echo "==> Setting up rc.conf.local"
 cat > /etc/rc.conf.local << RC_CONF
-fsck_y_enable="YES"
-dumpdev="AUTO"
 
-# Enable Triton support. Do not remove.
-triton_enable="YES"
-
-sshd_enable="YES"
-ntpd_enable="YES"
-ntpd_sync_on_start="YES"
+ntpd_flags=
 
 RC_CONF
 
