@@ -217,31 +217,31 @@ create_layout() {
     tar -czpf ../${TRITON_DIST_FILE} ./etc ./lib ./usr
   )
 
-  cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
+  cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/amd64/${TRITON_DIST_FILE}
 
   echo "==> Creating workdir and untar base61.tgz"
-  mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
-  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base61.tgz
+  mkdir $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR
+  tar -xz -C $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/amd64/base61.tgz
 
-  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
-  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
+  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/"
+  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/
 
   echo "==> Enable serial and internal consoles"
-  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
-  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
-  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/ttys
+  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/boot.conf
+  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/boot.conf
+  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/ttys
 
   echo "==> Get network up automatically in the blank VM"
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio0
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio1
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/hostname.vio0
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/hostname.vio1
 
   echo "==> Set resolvers in the blank VM"
-  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
-  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
+  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/resolv.conf
+  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/resolv.conf
 
   echo "==> Retar the archive and remove workdir"
-  tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base61.tgz ./
-  rm -rf ${ISO_LAYOUT:?}/${RELEASE}/${WORK_DIR}
+  tar -C $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/amd64/base61.tgz ./
+  rm -rf ${ISO_LAYOUT:?}/${RELEASE}/amd64/${WORK_DIR}
 
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
@@ -255,7 +255,7 @@ create_newiso() {
   echo "==> Preparing NEW ISO"
   mkisofs -J -R -no-emul-boot \
     -V "$CUSTOM_ISO_TITLE" \
-    -p "Joyent" -b $RELEASE/cdboot \
+    -p "Joyent" -b $RELEASE/amd64/cdboot \
     -o $ISO_FILENAME $ISO_LAYOUT
   echo "==> Custom ISO now ready: $ISO_FILENAME"
 }
