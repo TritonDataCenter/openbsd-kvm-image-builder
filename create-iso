@@ -13,6 +13,7 @@ fi
 
 AUTO_INST="installerconfig"
 TRITON_DIST_FILE="site60.tgz"
+WORK_DIR="work"
 
 RELEASE=
 MIRROR=
@@ -210,28 +211,33 @@ create_layout() {
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/${TRITON_DIST_FILE}
 
   echo "==> Creating workdir and untar base60.tgz"
-  mkdir $ISO_LAYOUT/$RELEASE
-  tar -xz -C $ISO_LAYOUT/$RELEASE -f $ISO_LAYOUT/$RELEASE/base60.tgz
+  mkdir $ISO_LAYOUT/$RELEASE/$WORK_DIR
+  tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base60.tgz
 
-  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/etc/"
-  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/etc/
+  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/"
+  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/
 
   echo "==> Enable serial and internal consoles"
-  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/etc/boot.conf
-  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/etc/boot.conf
-  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/etc/ttys
+  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
+  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
+  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/ttys
 
   echo "==> Get network up automatically in the blank VM"
+<<<<<<< HEAD
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio0
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/etc/hostname.vio1
+=======
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio0
+  echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio1
+>>>>>>> parent of 8f9903b... Get rid of WORK_DIR
 
   echo "==> Set resolvers in the blank VM"
-  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/etc/resolv.conf
-  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/etc/resolv.conf
+  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
+  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
 
   echo "==> Retar the archive and remove workdir"
-  tar -C $ISO_LAYOUT/$RELEASE -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
-  rm -rf ${ISO_LAYOUT:?}/${RELEASE}
+  tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
+  rm -rf ${ISO_LAYOUT:?}/${RELEASE}/${WORK_DIR}
 
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
