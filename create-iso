@@ -13,7 +13,7 @@ if [[ -n "$TRACE" ]]; then
   set -o xtrace
 fi
 
-AUTO_INST="auto_install.conf"
+AUTO_INST="installerconfig"
 TRITON_DIST_FILE="site60.tgz"
 WORK_DIR="work"
 
@@ -31,7 +31,7 @@ ISO_FILENAME=
 usage() {
 cat <<EOF
 
-Create a custom OpenBSD ISO with the necessary packages and tooling installed 
+Create a custom OpenBSD ISO with the necessary packages and tooling installed
 for deploying on SmartOS, Triton and the Joyent Public Cloud.
 
 Usage:
@@ -150,23 +150,23 @@ fetch_iso() {
   if [[ ! -d $ISO_DIR ]]; then
     mkdir -p $ISO_DIR
   fi
-  
+
   echo "==> Fetching ${ISO_CHECKSUM}"
   curl -o ${ISO_DIR}/${ISO_CHECKSUM} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO_CHECKSUM}
-  
+
   echo "==> Checking for local copy of $ISO..."
   if [[ -e $ISO_DIR/$ISO ]]; then
     echo "==> Found local copy of $ISO"
-    
+
   else
       echo "==> Local copy not found."
       echo "==> Fetching ISO from $MIRROR..."
       curl -o ${ISO_DIR}/${ISO} http://${MIRROR}${MIRROR_PATH}/${RELEASE}/${ISO}
       echo "==> Done!"
       echo "==> ${ISO} saved to $ISO_DIR/"
-      
+
       echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
-    
+
       if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[:space:]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[:space:]')" ]]; then
           echo "==> Checksums match."
       else
@@ -184,24 +184,24 @@ create_layout() {
   fi
   echo "==> Creating $ISO_LAYOUT"
   mkdir -p $ISO_LAYOUT
-  
+
   if [[ ! -d $ISO_MOUNT ]]; then
       echo "==> Creating $ISO_MOUNT ..."
-      mkdir $ISO_MOUNT 
+      mkdir $ISO_MOUNT
   fi
-  
+
   if df | grep -q $ISO_MOUNT; then
     echo "==> Unmounting previous $ISO_MOUNT..."
     umount $ISO_MOUNT
   fi
-  
+
   echo "==> Mounting $ISO to $ISO_MOUNT"
   vnconfig vnd0 $ISO_DIR/$ISO
   mount -t cd9660 /dev/vnd0c $ISO_MOUNT
-  
+
   echo "==> Copying layout from $ISO_MOUNT to $ISO_LAYOUT"
   rsync -aq $ISO_MOUNT/ $ISO_LAYOUT
-  
+
   echo "==> Copying and integrating Triton guesttools:"
 
   # Cleanup previous distribution file
@@ -222,16 +222,16 @@ create_layout() {
   tar -xz -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/base60.tgz
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/$WORK_DIR/"
   cp $AUTO_INST $ISO_LAYOUT/$RELEASE/$WORK_DIR/
-  
+
   echo "==> Enable serial and internal consoles"
   echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
   echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/boot.conf
   echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/ttys
-  
+
   echo "==> Get network up automatically in the blank VM"
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio0
   echo "dhcp" > $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/hostname.vio1
-  
+
   echo "==> Set resolvers in the blank VM"
   echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
   echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/$WORK_DIR/etc/resolv.conf
@@ -239,7 +239,7 @@ create_layout() {
   echo "==> Retar the archive and remove workdir"
   tar -C $ISO_LAYOUT/$RELEASE/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/base60.tgz ./
   rm -rf ${ISO_LAYOUT:?}/${RELEASE}/${WORK_DIR}
-  
+
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
   vnconfig -u vnd0
@@ -249,7 +249,7 @@ create_newiso() {
   echo "==> Getting Volume ID for ${ISO}"
   CUSTOM_ISO_TITLE=$(isoinfo -d -i ${ISO_DIR}/${ISO} | grep "Volume id" | awk '{print $3}')
   echo "==> Volume ID is $CUSTOM_ISO_TITLE"
-  
+
   echo "==> Preparing NEW ISO"
   mkisofs -J -R -no-emul-boot \
     -V "$CUSTOM_ISO_TITLE" \
