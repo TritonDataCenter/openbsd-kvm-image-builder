@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 #
-# Copyright (c) 2016 Joyent Inc., All rights reserved.
+# Copyright (c) 2017 Joyent Inc., All rights reserved.
 # Set the hostname of the VM if it's not already configured by the user.
 
 # load common functions and vars

@@ -1,6 +1,6 @@
 #!/usr/local/bin/bash
 #
-# Copyright (c) 2016 Joyent Inc., All rights reserved.
+# Copyright (c) 2017 Joyent Inc., All rights reserved.
 #
 # Script that will use mdata field of run_userscript_flag
 # If field is set to TRUE, when this script is ran, then the mdata user-script 
