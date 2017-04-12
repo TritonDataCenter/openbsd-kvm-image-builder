@@ -13,7 +13,6 @@ IFS=$'\n\t'
 
 AUTO_INST="auto_install.conf"
 TRITON_DIST_FILE="site.tgz"
-WORK_DIR="work"
 
 RELEASE=
 MIRROR=
