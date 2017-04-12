@@ -12,7 +12,7 @@ set -euo pipefail
 IFS=$'\n\t'
 
 AUTO_INST="auto_install.conf"
-TRITON_DIST_FILE="site.tgz"
+TRITON_DIST_FILE="site61.tgz"
 
 RELEASE=
 MIRROR=
