@@ -5,7 +5,6 @@
 
 set -o errexit
 
-#now=$(date -u +%Y-%m-%dT%H:%MZ)
 now=$(date -u +%Y-%m-%dT%TZ)
 vm_uuid=$(uuid)
 SUM=/usr/bin/sum
@@ -139,4 +138,3 @@ cat <<EOF
   }
 }
 EOF
-
