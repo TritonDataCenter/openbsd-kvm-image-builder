@@ -243,6 +243,10 @@ create_layout() {
   tar -C $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/amd64/base61.tgz ./
   rm -rf ${ISO_LAYOUT:?}/${RELEASE}/amd64/${WORK_DIR}
 
+  echo "==> Generating shasum for $TRITON_DIST_FILE"
+  SITE_SHASUM=$(shasum -a 256 $TRITON_DIST_FILE | cut -f1 -d' ')
+  echo "SHA256 ($TRITON_DIST_FILE) = $SITE_SHASUM" >> $ISO_LAYOUT/$RELEASE/amd64/SHA256
+
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
 }
