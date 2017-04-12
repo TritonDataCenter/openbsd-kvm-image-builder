@@ -223,29 +223,8 @@ create_layout() {
   SITE_SHASUM=$(shasum -a 256 $TRITON_DIST_FILE | cut -f1 -d' ')
   echo "SHA256 ($TRITON_DIST_FILE) = $SITE_SHASUM" >> $ISO_LAYOUT/$RELEASE/amd64/SHA256
 
-  echo "==> Creating workdir and untar base61.tgz"
-  mkdir $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR
-  tar -xz -C $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR -f $ISO_LAYOUT/$RELEASE/amd64/base61.tgz
-
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/amd64/"
   cp $AUTO_INST $ISO_LAYOUT/$RELEASE/amd64/
-
-  echo "==> Enable serial and internal consoles"
-  echo "stty com0 38400" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/boot.conf
-  echo "set tty com0" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/boot.conf
-  echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/ttys
-
-  echo "==> Get network up automatically in the blank VM"
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/hostname.vio0
-  echo "dhcp" > $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/hostname.vio1
-
-  echo "==> Set resolvers in the blank VM"
-  echo "nameserver 8.8.8.8" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/resolv.conf
-  echo "nameserver 8.8.4.4" >> $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR/etc/resolv.conf
-
-  echo "==> Retar the archive and remove workdir"
-  tar -C $ISO_LAYOUT/$RELEASE/amd64/$WORK_DIR -cPpz -f $ISO_LAYOUT/$RELEASE/amd64/base61.tgz ./
-  rm -rf ${ISO_LAYOUT:?}/${RELEASE}/amd64/${WORK_DIR}
 
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
