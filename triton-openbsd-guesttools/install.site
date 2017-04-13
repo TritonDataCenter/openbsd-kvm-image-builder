@@ -22,8 +22,8 @@ echo "==> Setting Time Zone to UTC"
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 # Fetch and install binary updates. Ensures we have the latest security fixes.
-echo "==> Setting up pkg.conf with default mirror repository"
-echo "installpath = mirrors.evowise.com" >> /etc/pkg.conf
+echo "==> Setting up /etc/installurl with default mirror repository"
+echo "https://ftp.openbsd.org/pub/OpenBSD" >> /etc/installurl
 
 echo "==> Installing packages"
 pkg_add -I -u
