@@ -13,7 +13,7 @@ This must be run on a OpenBSD machine or VirtualMachine.
 The following packages are required:
 
 ```
-pkg install -y bash rsync cdrtools
+pkg_add bash cdrtools git rsync 
 ```
 
 ## Usage
