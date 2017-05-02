@@ -220,8 +220,8 @@ create_layout() {
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/amd64/${TRITON_DIST_FILE}
 
   echo "==> Generating shasum for $TRITON_DIST_FILE"
-  SITE_SHASUM=$(shasum -a 256 $TRITON_DIST_FILE | cut -f1 -d' ')
-  echo "SHA256 ($TRITON_DIST_FILE) = $SITE_SHASUM" >> $ISO_LAYOUT/$RELEASE/amd64/SHA256
+  SITE_SHASUM=$(cksum -a sha256 $TRITON_DIST_FILE | cut -f1 -d' ')
+  echo "$SITE_SHASUM" >> $ISO_LAYOUT/$RELEASE/amd64/SHA256
 
   echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/amd64/"
   cp $AUTO_INST $ISO_LAYOUT/$RELEASE/amd64/
