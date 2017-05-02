@@ -62,4 +62,4 @@ own environment and tools.
 PRODUCT
 
 # Shutdown/Poweroff
-halt -p
+shutdown now
