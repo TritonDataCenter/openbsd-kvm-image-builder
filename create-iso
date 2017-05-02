@@ -202,7 +202,8 @@ create_layout() {
   fi
 
   echo "==> Mounting $ISO to $ISO_MOUNT"
-  mount -t cd9660 /dev/"$(mdconfig -f $ISO_DIR/$ISO)" $ISO_MOUNT
+  vnconfig vnd0 $ISO_DIR/$ISO
+  mount -t cd9660 /dev/vnd0c $ISO_MOUNT
 
   echo "==> Copying layout from $ISO_MOUNT to $ISO_LAYOUT"
   rsync -aq $ISO_MOUNT/ $ISO_LAYOUT
@@ -227,6 +228,7 @@ create_layout() {
 
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
+  vnconfig -u vnd0
 }
 
 create_newiso() {
