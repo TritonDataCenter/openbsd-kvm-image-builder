@@ -201,6 +201,7 @@ create_layout() {
   if df | grep -q $ISO_MOUNT; then
     echo "==> Unmounting previous $ISO_MOUNT..."
     umount $ISO_MOUNT
+    vnconfig -u vnd0
   fi
 
   echo "==> Mounting $ISO to $ISO_MOUNT"
