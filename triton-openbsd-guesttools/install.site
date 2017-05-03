@@ -1,6 +1,6 @@
 !/bin/sh
 
-echo "==> Running installerconfig"
+echo "==> Running install.site"
 
 # Enable serial and internal consoles
 echo "==> Enabling serial and internal consoles"
