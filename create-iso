@@ -228,18 +228,24 @@ create_layout() {
 
   echo "==> Copying $AUTO_INST to ramdisk"
 
+  if df | grep -q $ISO_MOUNT; then
+    echo "==> Unmounting previous $ISO_MOUNT..."
+    umount $RAMDISK
+    vnconfig -u vnd1
+  fi
+
   echo "===> Building $RDSETROOT"
   (
     cd /usr/src/distrib/common
-    cc -o /$RDSETROOT elf32.c elf64.c elfrdsetroot.c
+    cc -o $RDSETROOT elf32.c elf64.c elfrdsetroot.c
   )
 
   echo "===> Creating ramdisk.img"
   $RDSETROOT -x ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
 
   echo "===> Mounting ramdisk to $RAMDISK"
-  vnconfig vnd0 ramdisk.img
-  mount /dev/vnd0a $RAMDISK
+  vnconfig vnd1 ramdisk.img
+  mount /dev/vnd1a $RAMDISK
 
   echo "===> Copying $AUTO_INST to $RAMDISK"
   cp $AUTO_INST $RAMDISK
