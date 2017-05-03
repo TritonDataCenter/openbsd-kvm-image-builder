@@ -54,6 +54,7 @@ chown root:utmp /var/run/utmp
 chmod 644 /var/run/utmp /var/log/{lastlog,wtmp}
 
 # Shutdown/Poweroff
-echo "Powerdown=YES" > /etc/rc.shutdown 
+# 1=powerdown hack, try if halt -p doesn't work
+echo "machdep.apmhalt=1" >> /etc/sysctl.conf
 echo "===> Shutting down..."
 halt -p
