@@ -256,9 +256,8 @@ create_layout() {
   echo "===> Copying $AUTO_INST to $RAMDISK"
   cp $AUTO_INST $RAMDISK
 
-  echo "===> Putting ramdisk.img back to bsd.rd and bsd"
+  echo "===> Putting ramdisk.img back to bsd.rd"
   $RDSETROOT ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
-  mv ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ${ISO_LAYOUT}/${RELEASE}/amd64/bsd
 
   echo "===> unmounting /dev/vnd1a"
   umount $RAMDISK
