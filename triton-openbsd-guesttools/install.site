@@ -54,5 +54,6 @@ chown root:utmp /var/run/utmp
 chmod 644 /var/run/utmp /var/log/{lastlog,wtmp}
 
 # Shutdown/Poweroff
+echo "Powerdown=YES" > /etc/rc.shutdown 
 echo "===> Shutting down..."
 halt -p
