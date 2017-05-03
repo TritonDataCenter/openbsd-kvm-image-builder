@@ -23,6 +23,8 @@ ISO_MOUNT=
 ISO_LAYOUT=
 ISO_CHECKSUM=
 ISO_FILENAME=
+RAMDISK=/mnt/ramdisk
+RDSETROOT=/usr/local/bin/rdsetroot
 
 
 usage() {
@@ -223,8 +225,34 @@ create_layout() {
   SITE_SHASUM=$(cksum -a sha256 $TRITON_DIST_FILE | cut -f1 -d' ')
   echo "$SITE_SHASUM" >> $ISO_LAYOUT/$RELEASE/amd64/SHA256
 
-  echo "==> Copying $AUTO_INST to $ISO_LAYOUT/$RELEASE/amd64/"
-  cp $AUTO_INST $ISO_LAYOUT/$RELEASE/amd64/
+  echo "==> Copying $AUTO_INST to ramdisk"
+
+  echo "===> Building $RDSETROOT"
+  (
+    cd /usr/src/distrib/common
+    cc -o /$RDSETROOT elf32.c elf64.c elfrdsetroot.c
+  )
+
+  echo "===> Creating ramdisk.img"
+  $RDSETROOT -x ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
+
+  echo "===> Mounting ramdisk to $RAMDISK"
+  vnconfig vnd0 ramdisk.img
+  mount /dev/vnd0a $RAMDISK
+
+  echo "===> Copying $AUTO_INST to $RAMDISK"
+  cp $AUTO_INST $RAMDISK
+
+  echo "===> Putting ramdisk.img back to bsd.rd and bsd"
+  $RDSETROOT ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
+  mv ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ${ISO_LAYOUT}/${RELEASE}/amd64/bsd
+
+  echo "===> unmounting /dev/vnd1a"
+  umount /dev/vnd1a
+  vnconfig -u vnd1
+
+  echo "===> Cleaing up ramdisk.img"
+  rm -rf ramdisk.img
 
   echo "==> Unmounting $ISO_MOUNT"
   umount $ISO_MOUNT
