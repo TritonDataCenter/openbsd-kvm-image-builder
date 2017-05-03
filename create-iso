@@ -228,8 +228,8 @@ create_layout() {
 
   echo "==> Copying $AUTO_INST to ramdisk"
 
-  if df | grep -q $ISO_MOUNT; then
-    echo "==> Unmounting previous $ISO_MOUNT..."
+  if df | grep -q $RAMDISK; then
+    echo "==> Unmounting previous $RAMDISK..."
     umount $RAMDISK
     vnconfig -u vnd1
   fi
