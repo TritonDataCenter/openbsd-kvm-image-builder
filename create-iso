@@ -259,7 +259,7 @@ create_layout() {
   echo "===> Putting ramdisk.img back to bsd.rd"
   $RDSETROOT ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
 
-  echo "===> unmounting /dev/vnd1a"
+  echo "===> unmounting $RAMDISK"
   umount $RAMDISK
   vnconfig -u vnd1
 
