@@ -58,4 +58,4 @@ PRODUCT
 touch /var/run/utmp
 
 # Shutdown/Poweroff
-shutdown -p now
+halt -p
