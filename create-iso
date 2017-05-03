@@ -12,6 +12,8 @@ set -euo pipefail
 IFS=$'\n\t'
 
 AUTO_INST="auto_install.conf"
+RAMDISK=/mnt/ramdisk
+RDSETROOT=/usr/local/bin/rdsetroot
 TRITON_DIST_FILE="site61.tgz"
 
 RELEASE=
@@ -23,8 +25,7 @@ ISO_MOUNT=
 ISO_LAYOUT=
 ISO_CHECKSUM=
 ISO_FILENAME=
-RAMDISK=/mnt/ramdisk
-RDSETROOT=/usr/local/bin/rdsetroot
+
 
 
 usage() {
