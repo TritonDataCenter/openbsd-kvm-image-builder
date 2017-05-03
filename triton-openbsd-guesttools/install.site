@@ -19,6 +19,7 @@ RC_CONF
 
 # Set Time Zone to UTC
 echo "==> Setting Time Zone to UTC"
+mv /etc/localtime /etc/localtime.backup
 ln -s /usr/share/zoneinfo/UTC /etc/localtime
 
 # Fetch and install binary updates. Ensures we have the latest security fixes.
