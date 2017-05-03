@@ -230,7 +230,7 @@ create_layout() {
   echo "==> Copying $AUTO_INST to ramdisk"
 
   if df | grep -q $RAMDISK; then
-    echo "==> Unmounting previous $RAMDISK..."
+    echo "===> Unmounting previous $RAMDISK..."
     umount $RAMDISK
     vnconfig -u vnd1
   fi
@@ -245,7 +245,7 @@ create_layout() {
   $RDSETROOT -x ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
 
   if [[ ! -d $RAMDISK ]]; then
-    echo "==> Creating $RAMDISK ..."
+    echo "===> Creating $RAMDISK ..."
     mkdir -p $RAMDISK
   fi
 
@@ -263,7 +263,7 @@ create_layout() {
   echo "===> Putting ramdisk.img back to bsd.rd"
   $RDSETROOT ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
 
-  echo "===> Cleaing up ramdisk.img"
+  echo "==> Cleaing up ramdisk.img"
   rm -rf ramdisk.img
 
   echo "==> Unmounting $ISO_MOUNT"
