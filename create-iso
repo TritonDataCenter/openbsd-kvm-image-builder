@@ -250,7 +250,7 @@ create_layout() {
 
   echo "===> Mounting ramdisk to $RAMDISK"
   vnconfig vnd1 ramdisk.img
-  mount /dev/vnd1a $RAMDISK
+  mount /dev/vnd1c $RAMDISK
 
   echo "===> Copying $AUTO_INST to $RAMDISK"
   cp $AUTO_INST $RAMDISK
@@ -260,7 +260,7 @@ create_layout() {
   mv ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ${ISO_LAYOUT}/${RELEASE}/amd64/bsd
 
   echo "===> unmounting /dev/vnd1a"
-  umount /dev/vnd1a
+  umount $RAMDISK
   vnconfig -u vnd1
 
   echo "===> Cleaing up ramdisk.img"
