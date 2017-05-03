@@ -35,7 +35,7 @@ pkg_add -I bash curl node wget
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
-RELEASE="6.0"
+RELEASE="6.1"
 DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 
 # Create MOTD
