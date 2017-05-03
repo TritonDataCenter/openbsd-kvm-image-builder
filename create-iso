@@ -96,6 +96,11 @@ do
   esac
 done
 
+if [[ "$#" -eq 0 ]]; then
+  usage
+  exit 1
+fi
+
 if [[ -z ${RELEASE} ]]; then
   echo "Error: missing release value (-r)"
   exit 1
