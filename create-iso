@@ -235,11 +235,15 @@ create_layout() {
     vnconfig -u vnd1
   fi
 
-  echo "===> Building $RDSETROOT"
-  (
-    cd /usr/src/distrib/common
-    cc -o $RDSETROOT elf32.c elf64.c elfrdsetroot.c
-  )
+  if [[ ! -e $RDSETROOT ]]; then
+    echo "===> Building $RDSETROOT"
+    (
+      cd /usr/src/distrib/common
+      cc -o $RDSETROOT elf32.c elf64.c elfrdsetroot.c
+    )
+  fi
+
+
 
   echo "===> Creating ramdisk.img"
   $RDSETROOT -x ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
