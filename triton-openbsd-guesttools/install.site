@@ -21,14 +21,6 @@ RC_CONF
 echo "==> Setting up /etc/installurl with default mirror repository"
 echo "https://ftp.openbsd.org/pub/OpenBSD" >> /etc/installurl
 
-echo "==> Updating hints for runtime linker via ldconfig"
-# Add missing /var/run/ld.so.hints file
-touch /var/run/ld.so.hints
-# Remove inaccessible directories from search path
-ldconfig -U
-# Rescan the previously configured directories.
-ldconfig -R
-
 echo "==> Installing packages"
 pkg_add -I -u
 pkg_add -I bash curl node wget
