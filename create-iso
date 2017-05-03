@@ -243,6 +243,11 @@ create_layout() {
   echo "===> Creating ramdisk.img"
   $RDSETROOT -x ${ISO_LAYOUT}/${RELEASE}/amd64/bsd.rd ramdisk.img
 
+  if [[ ! -d $RAMDISK ]]; then
+    echo "==> Creating $RAMDISK ..."
+    mkdir -p $RAMDISK
+  fi
+
   echo "===> Mounting ramdisk to $RAMDISK"
   vnconfig vnd1 ramdisk.img
   mount /dev/vnd1a $RAMDISK
