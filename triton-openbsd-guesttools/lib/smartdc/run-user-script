@@ -1,11 +1,11 @@
-#!/usr/local/bin/bash
+#!/bin/ksh
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 #
 # Script that will use mdata field of run_userscript_flag
-# If field is set to TRUE, when this script is ran, then the mdata user-script 
+# If field is set to TRUE, when this script is ran, then the mdata user-script
 # is updated and executed
-# By default the mdata user-script is only ran once on the first boot after 
+# By default the mdata user-script is only ran once on the first boot after
 # provisioning
 # This script is executed on each system boot
 

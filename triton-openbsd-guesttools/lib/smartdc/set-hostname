@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/ksh
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 # Set the hostname of the VM if it's not already configured by the user.
@@ -11,16 +11,16 @@ if [[ $? -ne 0 ]]; then
   lib_triton_info "No hostname set in /etc/myname."
   hostname=$($MDATA_GET sdc:hostname) && \
     lib_triton_info "Setting hostname to sdc:hostname: $hostname."
-  
+
   if [[ $? -ne 0 ]]; then
     lib_triton_info "No value set for sdc:hostname."
     hostname=$($MDATA_GET sdc:uuid) && \
       lib_triton_info "Setting hostname to sdc:uuid: $hostname"
-    
+
     if [[ $? -ne 0 ]]; then
       lib_triton_info "No value set for sdc:uuid. Setting empty hostname."
       hostname=""
-      
+
     fi
   fi
 

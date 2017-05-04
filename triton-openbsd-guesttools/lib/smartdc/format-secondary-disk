@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/ksh
 
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
@@ -40,7 +40,7 @@ checkformount
 return_val=$?
 if [[ "$return_val" -eq 1 ]]; then
   lib_triton_fatal "data disk is already mounted"
-else 
+else
   lib_triton_info "no data disk is mounted"
 fi
 
@@ -100,7 +100,7 @@ checkformount
 return_val=$?
 if [[ "$return_val" -eq 1 ]]; then
   lib_triton_info "data disk is mounted"
-else 
+else
   lib_triton_fatal "no data disk is mounted"
 fi
 
