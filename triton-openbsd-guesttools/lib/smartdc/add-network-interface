@@ -13,10 +13,10 @@ for device in $(ifconfig | grep flags | cut -d: -f1); do
     continue
   fi
 
-  ls /etc/hostname.$device & > /dev/null
+  ls /etc/hostname."$device" & > /dev/null
   if [[ $? -ne 0 ]]; then
     lib_triton_info "New interface found: $device. Adding to /etc/hostname.$device"
-    echo "dhcp # Added by triton" >> /etc/hostname.$device
+    echo "dhcp # Added by triton" >> /etc/hostname."$device"
 
     nic_added=y
   fi
@@ -24,7 +24,7 @@ done
 
 if [[ "$nic_added" == "y" ]]; then
   lib_triton_info "Adding $device"
-  /etc/netstart $device
+  /etc/netstart "$device"
 fi
 
 exit 0

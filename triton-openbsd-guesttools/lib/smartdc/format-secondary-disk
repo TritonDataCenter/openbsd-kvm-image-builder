@@ -19,7 +19,7 @@ FDISK=/sbin/fdisk
 checkformount() {
    fstest=$(df -h | grep "/dev/${DATADISKDEVICE}a")
    if [[ -n "$fstest" ]] ; then
-     fssize=$(echo $fstest | sed -E '/[[:space:]]{2,}/s// /g' | cut -d ' ' -f2)
+     fssize=$(echo "$fstest" | sed -E '/[[:space:]]{2,}/s// /g' | cut -d ' ' -f2)
      lib_triton_info "$fssize data disk is mounted on /dev/${DATADISKDEVICE}a"
      return 1
    else
