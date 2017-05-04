@@ -9,14 +9,6 @@ ntpd_flags=
 
 RC_CONF
 
-# Fetch and install binary updates. Ensures we have the latest security fixes.
-echo "===> Setting up /etc/installurl with default mirror repository"
-echo "https://ftp.openbsd.org/pub/OpenBSD" >> /etc/installurl
-
-echo "===> Installing packages"
-pkg_add -I -u
-pkg_add -I bash
-
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
