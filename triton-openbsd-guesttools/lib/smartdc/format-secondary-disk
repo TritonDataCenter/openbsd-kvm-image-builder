@@ -79,7 +79,7 @@ fi
 
 # add entry to fstab so data disk is mounted on reboot
 duid=$(disklabel ${DATADISKDEVICE} | grep duid | cut -d ' ' -f 2)
-fsentry=$(grep "$duid.a" /etc/fstab | wc -l | tr -d ' ')
+fsentry=$(grep -c "$duid.a" /etc/fstab)
 echo "-- $fsentry --"
 if [[ $fsentry -eq 0 ]] ; then
   lib_triton_info "adding fstab entry for ${DATADISKDEVICE}"
