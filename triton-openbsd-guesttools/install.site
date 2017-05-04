@@ -5,9 +5,13 @@ echo "==> Running install.site"
 echo "===> Setting up rc.conf.local"
 cat > /etc/rc.conf.local << RC_CONF
 
+apmd_flags=
 ntpd_flags=
 
 RC_CONF
+
+echo "===> Starting apmd service..."
+/etc/rc.d/apmd start
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
