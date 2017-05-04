@@ -15,7 +15,7 @@ echo "https://ftp.openbsd.org/pub/OpenBSD" >> /etc/installurl
 
 echo "===> Installing packages"
 pkg_add -I -u
-pkg_add -I bash curl node wget
+pkg_add -I bash
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
