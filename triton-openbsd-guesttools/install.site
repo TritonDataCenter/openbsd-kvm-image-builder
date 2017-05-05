@@ -10,6 +10,11 @@ ntpd_flags=
 
 RC_CONF
 
+echo "===> Enabling ampd and checking status:"
+rcctl set apmd status on
+rcctl get apmd
+echo $?
+
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
