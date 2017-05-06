@@ -10,6 +10,12 @@ ntpd_flags=
 
 RC_CONF
 
+# Enable serial and internal consoles
+echo "===> Enable serial and internal consoles"
+echo "stty com0 38400" > /etc/boot.conf
+echo "set tty com0" >> /etc/boot.conf
+echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
+
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
