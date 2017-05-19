@@ -46,8 +46,8 @@ fi
 
 ## make sure that a partiton does not already exist
 ## we do not want to delete any data
-partexists=$($FDISK ${DATADISKDEVICE} | grep "OpenBSD")
-if [[ $partexists -eq 0 ]] ; then
+partexists=$($FDISK ${DATADISKDEVICE} | grep -c "OpenBSD")
+if [[ $partexists -gt 0 ]] ; then
     lib_triton_fatal "Data disk partition '/dev/${DATADISKDEVICE}' found. Exiting to prevent deleting data. You will have to format data disk partition manually."
     exit 0;
 fi
