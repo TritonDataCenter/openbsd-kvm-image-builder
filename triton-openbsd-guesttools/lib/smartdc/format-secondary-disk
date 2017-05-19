@@ -31,7 +31,7 @@ checkformount() {
 # Start of Main
 
 # check for device
-if [[ ! -e /dev/${DATADISKDEVICE} ]] ; then
+if [[ ! -e /dev/${DATADISKDEVICE}a ]] ; then
   lib_triton_fatal "secondary disk '/dev/${DATADISKDEVICE}' not found. exiting."
 fi
 
