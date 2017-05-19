@@ -41,6 +41,7 @@ echo "set tty com0" >> /etc/boot.conf
 echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
 
 echo "===> Updating installed packages..."
+echo "https://ftp.openbsd.org/pub/OpenBSD" > /etc/installurl
 pkg_add -I -u
 
 echo "===> Shutting down..."
