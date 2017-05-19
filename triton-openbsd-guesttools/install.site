@@ -44,6 +44,9 @@ echo "===> Updating installed packages..."
 echo "https://ftp.openbsd.org/pub/OpenBSD" > /etc/installurl
 pkg_add -I -u
 
+echo "Deleting /etc/myname"
+rm -rf /etc/myname
+
 echo "===> Shutting down..."
 halt -p
 
