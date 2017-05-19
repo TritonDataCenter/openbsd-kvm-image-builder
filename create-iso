@@ -158,6 +158,7 @@ fetch_iso() {
 
   echo "==> Fetching ${ISO_CHECKSUM}"
   curl -sS -o ${ISO_DIR}/${ISO_CHECKSUM} https://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/${ISO_CHECKSUM}
+  curl -sS -o ${ISO_DIR}/${ISO_CHECKSUM}.sig https://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/${ISO_CHECKSUM}.sig
 
   echo "==> Checking for local copy of $ISO..."
   if [[ -e $ISO_DIR/$ISO ]]; then
@@ -165,10 +166,8 @@ fetch_iso() {
 
     echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-    if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[:space:]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[:space:]')" ]]; then
-        echo "==> Checksums match."
-    else
-        echo "==> Checksums don't match!"
+    (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+    if [[ $?  != 0 ]]; then
         exit 1
     fi
 
@@ -181,10 +180,8 @@ fetch_iso() {
 
       echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-      if [[ "$(sha256 $ISO_DIR/$ISO | cut -f2 -d= | tr -d '[:space:]')" == "$(grep "($ISO)" $ISO_DIR/${ISO_CHECKSUM} | cut -f2 -d= | tr -d '[:space:]')" ]]; then
-          echo "==> Checksums match."
-      else
-          echo "==> Checksums don't match!"
+      (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+      if [[ $?  != 0 ]]; then
           exit 1
       fi
   fi
