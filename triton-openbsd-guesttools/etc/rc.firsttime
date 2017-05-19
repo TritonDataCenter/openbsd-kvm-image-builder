@@ -11,7 +11,7 @@ echo "===> Updating installed packages..."
 echo "https://ftp.openbsd.org/pub/OpenBSD" > /etc/installurl
 pkg_add -I -u
 
-echo "Deleting /etc/myname"
+echo "===> Deleting /etc/myname"
 rm -rf /etc/myname
 
 ## Build date used for motd and product file
