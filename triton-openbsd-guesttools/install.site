@@ -2,13 +2,9 @@
 
 echo "==> Running install.site"
 
-echo "===> Setting up rc.conf.local"
-cat > /etc/rc.conf.local << RC_CONF
+echo "==> Appending customization to /etc/rc.firsttime..."
 
-apmd_flags=
-ntpd_flags=
-
-RC_CONF
+cat > /etc/rc.firsttime << FIRSTTIME
 
 # Enable serial and internal consoles
 echo "===> Enable serial and internal consoles"
@@ -48,9 +44,8 @@ PRODUCT
 echo "===> Updating installed packages..."
 pkg_add -I -u
 
-# Add missing files
-echo "===> Adding /var/run/utmp /var/log/{lastlog,wtmp}"
-touch /var/run/utmp /var/log/{lastlog,wtmp}
+# Shutdown/Poweroff
+echo "===> Shutting down..."
+halt -p
 
-chown root:utmp /var/run/utmp
-chmod 644 /var/run/utmp /var/log/{lastlog,wtmp}
+FIRSTTIME
