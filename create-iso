@@ -223,7 +223,7 @@ create_layout() {
   [[ -f $TRITON_DIST_FILE ]] && rm $TRITON_DIST_FILE
 
   ( cd triton-openbsd-guesttools
-    tar -czpf ../${TRITON_DIST_FILE} ./etc ./lib ./usr ./install.site
+    tar -czpf ../${TRITON_DIST_FILE} ./etc ./lib ./usr
   )
 
   cp $TRITON_DIST_FILE ${ISO_LAYOUT}/${RELEASE}/amd64/${TRITON_DIST_FILE}

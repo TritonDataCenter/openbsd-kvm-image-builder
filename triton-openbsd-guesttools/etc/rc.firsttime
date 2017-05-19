@@ -1,6 +1,18 @@
 #!/bin/ksh
 
-echo "==> Running install.site"
+echo "==> Running rc.firsttime..."
+
+echo "===> Enable serial and internal consoles"
+echo "stty com0 38400" > /etc/boot.conf
+echo "set tty com0" >> /etc/boot.conf
+echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
+
+echo "===> Updating installed packages..."
+echo "https://ftp.openbsd.org/pub/OpenBSD" > /etc/installurl
+pkg_add -I -u
+
+echo "Deleting /etc/myname"
+rm -rf /etc/myname
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
@@ -31,23 +43,5 @@ installed. Ideal for users who are comfortable with setting up their \
 own environment and tools.
 PRODUCT
 
-echo "==> Appending customization to /etc/rc.firsttime..."
-
-cat > /etc/rc.firsttime << FIRSTTIME
-
-# echo "===> Enable serial and internal consoles"
-# echo "stty com0 38400" > /etc/boot.conf
-# echo "set tty com0" >> /etc/boot.conf
-# echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
-
-echo "===> Updating installed packages..."
-echo "https://ftp.openbsd.org/pub/OpenBSD" > /etc/installurl
-pkg_add -I -u
-
-echo "Deleting /etc/myname"
-rm -rf /etc/myname
-
 echo "===> Shutting down..."
 halt -p
-
-FIRSTTIME
