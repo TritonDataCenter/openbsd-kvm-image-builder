@@ -69,7 +69,7 @@ lib_triton_info "creating partition /dev/${DATADISKDEVICE}"
 disklabel -A -T ${DISKLABELTEMPLATE} -w ${DATADISKDEVICE}
 
 lib_triton_info "creating new filesystem on /dev/${DATADISKDEVICE}p1"
-newfs ${DATADISKDEVICE}
+newfs ${DATADISKDEVICE}a
 
 # Check for /data and make it
 if [[ ! -e /data ]]; then
