@@ -7,7 +7,7 @@
 . /lib/smartdc/common.lib
 
 ls /etc/myname &>/dev/null
-if [[ $? -ne 0 ]]; then
+if [[ ! -e /etc/myname ]]; then
   lib_triton_info "No hostname set in /etc/myname."
   hostname=$($MDATA_GET sdc:hostname) && \
     lib_triton_info "Setting hostname to sdc:hostname: $hostname."
