@@ -29,6 +29,8 @@ DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 echo "===> Creating /etc/motd"
 mv /etc/motd /etc/motd-backup
 cat << MOTD > /etc/motd
+
+
    __        .                   .
  _|  |_      | .-. .  . .-. :--. |-
 |_    _|     ;|   ||  |(.-' |  | |
