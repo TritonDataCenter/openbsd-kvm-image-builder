@@ -17,6 +17,9 @@ rm -rf /etc/myname
 echo "===> Removing ssh host keys"
 rm -rf /etc/ssh/ssh_host_*
 
+echo "===> Removing /root/.ssh/authorized_keys"
+rm -rf /root/.ssh/authorized_keys
+
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
