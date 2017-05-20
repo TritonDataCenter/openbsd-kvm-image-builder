@@ -14,6 +14,9 @@ pkg_add -I -u
 echo "===> Deleting /etc/myname"
 rm -rf /etc/myname
 
+echo "===> Removing ssh host keys"
+rm -rf /etc/ssh/ssh_host_*
+
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
