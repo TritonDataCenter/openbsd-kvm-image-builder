@@ -36,7 +36,7 @@ if [[ -x /var/tmp/mdata-user-script ]]; then
   if [[ ! -e $USER_SCRIPT_LOG ]]; then
     touch $USER_SCRIPT_LOG
   fi
-  /var/svc/mdata-user-script >> $USER_SCRIPT_LOG 2>&1
+  /var/tmp/mdata-user-script >> $USER_SCRIPT_LOG 2>&1
   [[ $? -gt 0 ]] && user_script_exit=95
 fi
 
