@@ -83,7 +83,7 @@ fsentry=$(grep -c "$duid.a" /etc/fstab)
 echo "-- $fsentry --"
 if [[ $fsentry -eq 0 ]] ; then
   lib_triton_info "adding fstab entry for ${DATADISKDEVICE}"
-  printf "%s\t/data\t\tffs\trw\t2\t2\n" "$duid.a" >> /etc/fstab
+  printf "%s /data ffs rw 2 2\n" "$duid.a" >> /etc/fstab
 else
   lib_triton_info "not adding as fstab entry already exist for ${DATADISKDEVICE} or $duid.a"
 fi
