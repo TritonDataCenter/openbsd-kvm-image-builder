@@ -1,5 +1,7 @@
 #!/bin/ksh
 
+set -o xtrace
+
 echo "==> Running rc.firsttime..."
 
 echo "===> Enable serial and internal consoles"
