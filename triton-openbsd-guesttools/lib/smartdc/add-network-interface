@@ -11,6 +11,7 @@ for device in $(ifconfig | grep flags | cut -d: -f1 | grep vio); do
   if [[ ! -e /etc/hostname."$device" ]]; then
     lib_triton_info "New interface found: $device. Adding to /etc/hostname.$device"
     echo "dhcp" >> /etc/hostname."$device"
+    chmod 640 /etc/hostname."$device"
 
     lib_triton_info "Adding $device"
     sh /etc/netstart "$device"
