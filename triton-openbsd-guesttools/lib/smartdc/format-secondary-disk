@@ -103,5 +103,7 @@ if [[ "$return_val" -eq 1 ]]; then
 else
   lib_triton_fatal "no data disk is mounted"
 fi
+lib_triton_info "Removing $DISKLABELTEMPLATE"
+rm -rf $DISKLABELTEMPLATE
 
 exit 0
