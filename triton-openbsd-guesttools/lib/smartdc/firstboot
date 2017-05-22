@@ -6,6 +6,9 @@
 # load common functions and vars
 . /lib/smartdc/common.lib
 
+# Set root password if root_pw is set in the image manifest
+(/lib/smartdc/set-rootpassword)
+
 # Format disk
 (/lib/smartdc/format-secondary-disk)
 
