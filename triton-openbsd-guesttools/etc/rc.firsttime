@@ -24,6 +24,12 @@ rm -rf /root/.ssh/authorized_keys
 echo "===> Disable tunneled clear text passwords"
 echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 
+echo "===> Cleaning up dhcp leases"
+find /var/db -type f -name "dhclient.leases.*" | xargs rm -f
+
+echo "===> Cleaning up network interfaces"
+rm -rf /etc/hostname.*
+
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
 RELEASE="6.1"
