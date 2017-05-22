@@ -6,21 +6,15 @@
 # load common functions and vars
 . /lib/smartdc/common.lib
 
-nic_added=n
-
 for device in $(ifconfig | grep flags | cut -d: -f1 | grep vio); do
 
   if [[ ! -e /etc/hostname."$device" ]]; then
     lib_triton_info "New interface found: $device. Adding to /etc/hostname.$device"
     echo "dhcp" >> /etc/hostname."$device"
 
-    nic_added=y
+    lib_triton_info "Adding $device"
+    sh /etc/netstart "$device"
   fi
 done
-
-if [[ "$nic_added" == "y" ]]; then
-  lib_triton_info "Adding $device"
-  sh /etc/netstart "$device"
-fi
 
 exit 0
