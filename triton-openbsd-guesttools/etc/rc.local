@@ -13,12 +13,12 @@ export PS4='[\D{%FT%TZ}] ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}
 export BASH_XTRACEFD=4
 set -o xtrace
 
-(/lib/smartdc/add-network-interface)
 (/lib/smartdc/set-hostname)
 (/lib/smartdc/set-root-authorized-keys)
 if [[ ! -f /lib/smartdc/.firstboot-complete-do-not-delete ]] ; then
   (/lib/smartdc/firstboot)
 fi
+(/lib/smartdc/add-network-interface)
 (/lib/smartdc/run-operator-script)
 (/lib/smartdc/get-user-data)
 (/lib/smartdc/run-user-script)
