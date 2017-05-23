@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/usr/local/bin/bash
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 # This script checks new network interfaces for and enables via DHCP at boot.
