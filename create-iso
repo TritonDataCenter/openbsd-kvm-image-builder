@@ -240,7 +240,7 @@ create_layout() {
   if [[ ! -e $RDSETROOT ]]; then
     (
       echo "===> Downloading src.tar.gz from $MIRROR..."
-      curl -sS -o /tmp/src.tar.gz https://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/src.tar.gz
+      curl -sS -o /tmp/src.tar.gz https://${MIRROR}${MIRROR_PATH}/${RELEASE}/src.tar.gz
       cd /usr/src
       tar xzf /tmp/src.tar.gz
       rm -rf /tmp/src.tar.gz
