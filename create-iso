@@ -238,8 +238,15 @@ create_layout() {
   fi
 
   if [[ ! -e $RDSETROOT ]]; then
-    echo "===> Building $RDSETROOT"
     (
+      echo "===> Downloading src.tar.gz from $MIRROR..."
+      curl -sS -o /tmp/src.tar.gz https://${MIRROR}${MIRROR_PATH}/${RELEASE}/amd64/src.tar.gz
+      cd /usr/src
+      tar xzf /tmp/src.tar.gz
+      rm -rf /tmp/src.tar.gz
+    )
+    (
+      echo "===> Building $RDSETROOT"
       cd /usr/src/distrib/common
       cc -o $RDSETROOT elf32.c elf64.c elfrdsetroot.c
     )
