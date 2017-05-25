@@ -238,13 +238,17 @@ create_layout() {
   fi
 
   if [[ ! -e $RDSETROOT ]]; then
-    (
-      echo "===> Downloading src.tar.gz from $MIRROR..."
-      curl -sS -o /tmp/src.tar.gz https://${MIRROR}${MIRROR_PATH}/${RELEASE}/src.tar.gz
-      cd /usr/src
-      tar xzf /tmp/src.tar.gz
-      rm -rf /tmp/src.tar.gz
-    )
+    if [[ ! -d /usr/src/distrib/common ]]; then
+      (
+        echo "===> Downloading src.tar.gz from $MIRROR..."
+        curl -sS -o /tmp/src.tar.gz https://${MIRROR}${MIRROR_PATH}/${RELEASE}/src.tar.gz
+        echo "===> Installing source tree..."
+        cd /usr/src
+        tar xzf /tmp/src.tar.gz
+        rm -rf /tmp/src.tar.gz
+      )
+    fi
+
     (
       echo "===> Building $RDSETROOT"
       cd /usr/src/distrib/common
