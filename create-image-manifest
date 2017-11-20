@@ -5,9 +5,6 @@
 
 set -o errexit
 
-VERSION=$(cat VERSION)
-SVER=$(echo $VERSION | tr -d \.)
-
 now=$(date -u +%Y-%m-%dT%TZ)
 vm_uuid=$(uuid)
 SUM=/usr/bin/sum
