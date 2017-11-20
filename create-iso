@@ -17,7 +17,7 @@ IFS=$'\n\t'
 AUTO_INST="auto_install.conf"
 RAMDISK=/mnt/ramdisk
 RDSETROOT=/usr/local/bin/rdsetroot
-TRITON_DIST_FILE="site62.tgz"
+TRITON_DIST_FILE="site${SVER}.tgz"
 
 RELEASE=
 MIRROR=
