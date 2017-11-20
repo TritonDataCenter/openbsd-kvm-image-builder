@@ -35,7 +35,7 @@ rm -rf /etc/hostname.*
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
-RELEASE="6.1"
+RELEASE="6.2"
 DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 
 # Create MOTD

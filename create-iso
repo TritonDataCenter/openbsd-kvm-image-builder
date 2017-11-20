@@ -3,6 +3,9 @@
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 #
 
+VERSION=$(cat VERSION)
+SVER=$(echo $VERSION | tr -d \.)
+
 if [[ -n "$TRACE" ]]; then
   export PS4='[\D{%FT%TZ}] ${BASH_SOURCE}:${LINENO}: ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
   set -o xtrace
@@ -14,7 +17,7 @@ IFS=$'\n\t'
 AUTO_INST="auto_install.conf"
 RAMDISK=/mnt/ramdisk
 RDSETROOT=/usr/local/bin/rdsetroot
-TRITON_DIST_FILE="site61.tgz"
+TRITON_DIST_FILE="site${SVER}.tgz"
 
 RELEASE=
 MIRROR=
@@ -38,10 +41,10 @@ Usage:
   $0 -r <RELEASE> -m <MIRROR> -p <MIRROR_PATH> -i <ISO> -c <ISO_CHECKSUM> -d <ISO_DIR> -M <ISO_MOUNT> -l <ISO_LAYOUT> -f <ISO_FILENAME>
 
 Example:
-  $0 -r 6.1 -m ftp5.usa.openbsd.org -p /pub/OpenBSD -i install61.iso -c SHA256 -d /data/openbsd-6.1-iso -M /mnt/openbsd-6.1-iso -l /data/openbsd-custom-6.1 -f openbsd-6.1-custom.iso
+  $0 -r ${VERSION} -m ftp5.usa.openbsd.org -p /pub/OpenBSD -i install${SVER}.iso -c SHA256 -d /data/openbsd-${VERSION}-iso -M /mnt/openbsd-${VERSION}-iso -l /data/openbsd-custom-${VERSION} -f openbsd-${VERSION}-custom.iso
 
 OPTIONS:
-  -r The desired OpenBSD release (e.g., 6.1)
+  -r The desired OpenBSD release (e.g., ${VERSION})
   -m The mirror to use when downloading the release ISO. Do not include protocol (e.g., http://). Assumes http mirror
   -p The desired mirror path to the ISO (e.g., /pub/OpenBSD)
   -i The ISO filename
@@ -166,7 +169,7 @@ fetch_iso() {
 
     echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-    (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+    (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-${SVER}-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
     if [[ $?  != 0 ]]; then
         exit 1
     fi
@@ -180,7 +183,7 @@ fetch_iso() {
 
       echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-      (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+      (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-${SVER}-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
       if [[ $?  != 0 ]]; then
           exit 1
       fi

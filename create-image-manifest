@@ -25,7 +25,7 @@ Usage: $0 -f filename -n <name> -s <size> -v <version>
 
 Example:
 
-    $0 -f freebsd-11-20161019.zfs.gz -n freebsd-11 -s 10240 -v 20161019 -o bsd
+    $0 -f openbsd-11-20161019.zfs.gz -n freebsd-11 -s 10240 -v 20161019 -o bsd
 
 USAGE
     exit 1

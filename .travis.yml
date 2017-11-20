@@ -5,4 +5,4 @@ addons:
     - debian-sid    # Grab ShellCheck from the Debian repo
     packages:
     - shellcheck
-script: shellcheck -e SC2086 -s bash create-image create-image-manifest create-iso
+script: shellcheck -e SC2181 -e SC2086 -s bash create-image create-image-manifest create-iso
