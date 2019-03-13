@@ -9,8 +9,11 @@ echo "stty com0 38400" > /etc/boot.conf
 echo "set tty com0" >> /etc/boot.conf
 echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
 
+echo "===> Linking old libc.so for mdata tools"
+ln -sf /usr/lib/libc.so.* /usr/lib/libc.so.89.3
+
 echo "===> Updating installed packages..."
-echo "http://ftp3.usa.openbsd.org/pub/OpenBSD" > /etc/installurl
+echo "http://ftp.eu.openbsd.org/pub/OpenBSD" > /etc/installurl
 pkg_check -I
 pkg_add -I -u
 pkg_add -I bash
@@ -35,21 +38,21 @@ rm -rf /etc/hostname.*
 
 ## Build date used for motd and product file
 BUILDDATE=$(date +%Y%m%d)
-RELEASE="6.1"
+RELEASE=`uname -r`
 DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 
 # Create MOTD
 echo "===> Creating /etc/motd"
 mv /etc/motd /etc/motd-backup
 cat << MOTD > /etc/motd
+                                 _     _
+  __ _ _ __  _   _  ___ __ _ ___| |_  (_) ___
+ / _` | '_ \| | | |/ __/ _` / __| __| | |/ _ \
+| (_| | | | | |_| | (_| (_| \__ \ |_ _| | (_) |
+ \__,_|_| |_|\__, |\___\__,_|___/\__(_)_|\___/
+             |___/   https://anycast.io
 
-
-   __        .                   .
- _|  |_      | .-. .  . .-. :--. |-
-|_    _|     ;|   ||  |(.-' |  | |
-  |__|   \`--'  \`-' \`;-| \`-' '  ' \`-'
-                   /  ;  Instance (OpenBSD $RELEASE $BUILDDATE)
-                   \`-'   $DOC_URL
+ Welcome to OpenBSD $RELEASE ($BUILDDATE)
 
 MOTD
 

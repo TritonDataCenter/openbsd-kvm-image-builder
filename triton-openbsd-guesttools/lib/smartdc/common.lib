@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#!/bin/ksh
 #
 # Copyright (c) 2017 Joyent Inc., All rights reserved.
 #
@@ -23,5 +23,5 @@ lib_triton_info() {
   $LOGGER "(info) - $0 - $@"
 }
 
-export -f lib_triton_fatal
-export -f lib_triton_info
+export lib_triton_fatal
+export lib_triton_info
