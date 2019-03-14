@@ -8,7 +8,7 @@
 LOGGER=/usr/bin/logger
 MDATA_GET='/usr/sbin/mdata-get'
 
-set -o xtrace
+#set -o xtrace
 
 # Common functions used by scripts /lib/smartdc
 

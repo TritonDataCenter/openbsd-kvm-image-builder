@@ -1,13 +1,14 @@
 #!/bin/sh
 
-set -o xtrace
+#set -o xtrace
 
 echo "==> Running rc.firsttime..."
 
 echo "===> Enable serial and internal consoles"
 echo "stty com0 38400" > /etc/boot.conf
 echo "set tty com0" >> /etc/boot.conf
-echo "tty00   \"/usr/libexec/getty std.38400\"   vt220 on secure" >> /etc/ttys
+
+sed -i 's;^tty00.*$;tty00   "/usr/libexec/getty std.38400"   vt220    on secure;' /etc/ttys
 
 echo "===> Linking old libc.so for mdata tools"
 ln -sf /usr/lib/libc.so.* /usr/lib/libc.so.89.3
@@ -27,7 +28,7 @@ echo "===> Removing /root/.ssh/authorized_keys"
 rm -rf /root/.ssh/authorized_keys
 
 echo "===> Disable tunneled clear text passwords"
-echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+sed -i 's;^#?PasswordAuthentication.*$;PasswordAuthentication no;g' /etc/ssh/sshd_config
 
 echo "===> Cleaning up dhcp leases"
 find /var/db -type f -name "dhclient.leases.*" | xargs rm -f
