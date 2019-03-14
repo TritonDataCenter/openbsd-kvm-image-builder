@@ -97,7 +97,7 @@ done
 
 # do this again here to get the new RELEASE
 OVER=$(echo ${RELEASE} | sed -e 's;\.;;g')
-TRITON_DIST_FILE="site${RELEASE}.tgz"
+TRITON_DIST_FILE="site${OVER}.tgz"
 
 if [[ "$#" -eq 0 ]]; then
   usage
