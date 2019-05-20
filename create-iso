@@ -13,7 +13,7 @@ IFS=$'\n\t'
 
 AUTO_INST="auto_install.conf"
 RAMDISK=/mnt/ramdisk
-RDSETROOT=/usr/local/bin/rdsetroot
+RDSETROOT=/usr/sbin/rdsetroot
 
 RELEASE=
 MIRROR=cdn.openbsd.org
