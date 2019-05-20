@@ -137,12 +137,11 @@ cat << MANIFEST > $BLANK_MANIFEST
   "nics": [
     {
       "interface": "net0",
-      "nic_tag": "external",
+      "nic_tag": "$VLAN_ID",
       "ip": "$IP",
       "primary": "true",
       "netmask": "$NETMASK",
       "gateway": "$GATEWAY",
-      "vlan_id": $VLAN_ID,
       "model": "virtio",
       "network_uuid": "$NETWORK_UUID"
     }
