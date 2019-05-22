@@ -45,12 +45,6 @@ DOC_URL="https://docs.joyent.com/images/kvm/openbsd"
 echo "===> Creating /etc/motd"
 mv /etc/motd /etc/motd-backup
 cat << MOTD > /etc/motd
-                                 _     _
-  __ _ _ __  _   _  ___ __ _ ___| |_  (_) ___
- / _` | '_ \| | | |/ __/ _` / __| __| | |/ _ \
-| (_| | | | | |_| | (_| (_| \__ \ |_ _| | (_) |
- \__,_|_| |_|\__, |\___\__,_|___/\__(_)_|\___/
-             |___/   https://anycast.io
 
  Welcome to OpenBSD $RELEASE ($BUILDDATE)
 
