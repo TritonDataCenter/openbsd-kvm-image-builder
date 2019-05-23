@@ -38,5 +38,5 @@ To build the OpenBSD KVM image run the `create-image` script:
 see `./create-image -h` for usage
 
 ```
-doas ./create-iso -r 6.4 -m cdn.openbsd.org -p /pub/OpenBSD -i cd64.iso -d $(pwd)/iso -M $(pwd)/iso -l $(pwd)/layout/ -f openbsd64.iso -c SHA256
+doas ./create-iso -r 6.5 -m cloudflare.cdn.openbsd.org -p /pub/OpenBSD -i install65.iso -d $(pwd)/iso -M $(pwd)/iso -l $(pwd)/layout/ -f openbsd65.iso  -c SHA256
 ```
