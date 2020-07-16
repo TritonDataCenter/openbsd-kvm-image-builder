@@ -13,21 +13,20 @@ IFS=$'\n\t'
 
 AUTO_INST="auto_install.conf"
 RAMDISK=/mnt/ramdisk
-RDSETROOT=/usr/local/bin/rdsetroot
-TRITON_DIST_FILE="site61.tgz"
+RDSETROOT=/usr/sbin/rdsetroot
 
 RELEASE=
-MIRROR=
-MIRROR_PATH=
+MIRROR=cdn.openbsd.org
+MIRROR_PATH=/pub/OpenBSD
 ISO=
 ISO_DIR=
 ISO_MOUNT=
 ISO_LAYOUT=
-ISO_CHECKSUM=
+ISO_CHECKSUM=SHA256
 ISO_FILENAME=
 
-
-
+DEFVER=6.4
+DEFOVER=$(echo ${DEFVER} | sed -e 's;\.;;g')
 usage() {
 cat <<EOF
 
@@ -38,10 +37,10 @@ Usage:
   $0 -r <RELEASE> -m <MIRROR> -p <MIRROR_PATH> -i <ISO> -c <ISO_CHECKSUM> -d <ISO_DIR> -M <ISO_MOUNT> -l <ISO_LAYOUT> -f <ISO_FILENAME>
 
 Example:
-  $0 -r 6.1 -m ftp5.usa.openbsd.org -p /pub/OpenBSD -i install61.iso -c SHA256 -d /data/openbsd-6.1-iso -M /mnt/openbsd-6.1-iso -l /data/openbsd-custom-6.1 -f openbsd-6.1-custom.iso
+  $0 -r ${DEFVER} -m cdn.openbsd.org -p /pub/OpenBSD -i install${DEFOVER}.iso -c SHA256 -d /tmp/openbsd-${DEFOVER}-iso -M /mnt/openbsd-${DEFOVER}-iso -l /tmp/openbsd-custom-${DEFOVER} -f openbsd-${DEFOVER}-joyent.iso
 
 OPTIONS:
-  -r The desired OpenBSD release (e.g., 6.1)
+  -r The desired OpenBSD release (e.g., ${DEFVER})
   -m The mirror to use when downloading the release ISO. Do not include protocol (e.g., http://). Assumes http mirror
   -p The desired mirror path to the ISO (e.g., /pub/OpenBSD)
   -i The ISO filename
@@ -95,6 +94,10 @@ do
       ;;
   esac
 done
+
+# do this again here to get the new RELEASE
+OVER=$(echo ${RELEASE} | sed -e 's;\.;;g')
+TRITON_DIST_FILE="site${OVER}.tgz"
 
 if [[ "$#" -eq 0 ]]; then
   usage
@@ -166,7 +169,7 @@ fetch_iso() {
 
     echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-    (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+    (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-${OVER}-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
     if [[ $?  != 0 ]]; then
         exit 1
     fi
@@ -180,7 +183,7 @@ fetch_iso() {
 
       echo "==> Verifying $ISO with ${ISO_CHECKSUM}"
 
-      (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-61-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
+      (cd $ISO_DIR && signify -C -p /etc/signify/openbsd-${OVER}-base.pub -x ${ISO_CHECKSUM}.sig ${ISO})
       if [[ $?  != 0 ]]; then
           exit 1
       fi

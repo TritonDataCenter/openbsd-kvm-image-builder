@@ -13,7 +13,7 @@ This must be run on a OpenBSD machine or VirtualMachine.
 The following packages are required:
 
 ```
-pkg_add bash cdrtools git rsync 
+pkg_add bash cdrtools git rsync
 ```
 
 ## Usage
@@ -36,3 +36,7 @@ To build the OpenBSD KVM image run the `create-image` script:
 ```
 
 see `./create-image -h` for usage
+
+```
+doas ./create-iso -r 6.5 -m cloudflare.cdn.openbsd.org -p /pub/OpenBSD -i install65.iso -d $(pwd)/iso -M $(pwd)/iso -l $(pwd)/layout/ -f openbsd65.iso  -c SHA256
+```

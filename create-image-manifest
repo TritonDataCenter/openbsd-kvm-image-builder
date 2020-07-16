@@ -110,7 +110,7 @@ cat <<EOF
   "homepage": "${homepage}",
   "published_at": "${now}",
   "os": "${os}",
-  "image_size": "${image_size}",
+  "image_size": ${image_size},
   "files": [
     {
       "sha1": "${shasum}",
